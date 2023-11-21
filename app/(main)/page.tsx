@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/20/solid";
 import Todo from "../ui/Todo";
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="flex justify-center">
       <div>

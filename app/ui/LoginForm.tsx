@@ -41,7 +41,7 @@ export default function LoginForm() {
             <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitted]}>
                 {
                     ([canSubmit, isSubmitted]) => (<div className="form-control mt-5">
-                        <button className="btn btn-primary" disabled={!canSubmit}>Signup</button>
+                        <button className="btn btn-primary" disabled={!canSubmit}>Login</button>
                     </div>)
                 }
             </form.Subscribe>

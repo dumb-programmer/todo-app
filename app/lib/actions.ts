@@ -1,14 +1,14 @@
 "use server";
 
-import { Prisma, PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { SignJWT } from "jose";
-
-const prisma = new PrismaClient();
+import getUser from "./getUser";
+import { prisma } from "./prisma";
+import { Prisma } from "@prisma/client";
 
 const UserSchema = z.object({
   email: z.string().email(),
@@ -80,4 +80,25 @@ export async function login(
   } else {
     return { errors: parsed.error.flatten().fieldErrors };
   }
+}
+
+const projectSchema = z.object({
+  name: z.string().min(1),
+  color: z.enum(["red"]),
+});
+
+export default async function createProject(
+  prevState: any,
+  formData: FormData
+) {
+  const project = Object.fromEntries(formData);
+  const parsed = projectSchema.safeParse(project);
+  if (!parsed.success) {
+    return { errors: parsed.error.flatten().fieldErrors };
+  }
+  const { email } = await getUser();
+  await prisma.project.create({
+    data: { name: parsed.data.name, userId: email },
+  });
+  revalidatePath("/");
 }
