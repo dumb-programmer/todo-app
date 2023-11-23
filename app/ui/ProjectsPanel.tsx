@@ -2,21 +2,18 @@
 
 import { useRef, useState } from "react";
 import CreateProjectForm from "./CreateProjectForm";
-import Project from "./Project";
+import ProjectLink from "./ProjectLink";
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "@heroicons/react/20/solid";
+import { Project } from "@prisma/client";
 
-interface Project {
-    id: string;
-    name: string;
-}
 
-export default function ProjectsPanel({ projects }: { projects: Project[] }) {
+export default function ProjectsPanel({ projects }: { projects: Omit<Project, "userId">[] }) {
     const formRef = useRef<HTMLDialogElement>();
     const [showProjects, setShowProjects] = useState(true);
 
     return <>
         <div className="px-7 mt-10">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center gap-2">
                 <h2 className="font-bold">Projects</h2>
                 <div className="flex gap-5">
                     <button className="btn btn-sm" onClick={() => formRef?.current?.showModal()}><PlusIcon height={20} /></button>
@@ -26,7 +23,7 @@ export default function ProjectsPanel({ projects }: { projects: Project[] }) {
             {
                 showProjects && <ul className="menu">
                     {
-                        projects.map(project => <Project key={project.id} project={project} />)
+                        projects.map(project => <ProjectLink key={project.id} project={project} />)
                     }
                 </ul>
             }

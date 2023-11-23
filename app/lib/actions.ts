@@ -83,8 +83,9 @@ export async function login(
 }
 
 const projectSchema = z.object({
-  name: z.string().min(1),
-  color: z.enum(["red"]),
+  name: z
+    .string()
+    .min(3, { message: "Name must contain atleast 3 characters" }),
 });
 
 export default async function createProject(

@@ -1,17 +1,17 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import createProject from "../lib/actions";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
-import { useEffect } from "react";
+import clsx from "clsx";
+import SubmitButton from "./SubmitButton";
 
 export default function CreateProjectForm({ formRef }: { formRef: React.MutableRefObject<HTMLDialogElement | undefined> }) {
     const form = useForm({
         defaultValues: {
             name: "",
-            color: "",
         },
         validator: zodValidator
     });
@@ -29,27 +29,17 @@ export default function CreateProjectForm({ formRef }: { formRef: React.MutableR
                         {
                             (field) => (<div className="form-control">
                                 <label className="label" htmlFor={field.name}>Name</label>
-                                <input className="input input-bordered" id={field.name} name={field.name} type="text" />
+                                <input className={clsx("input input-bordered", state?.errors.name && "input-error")} id={field.name} onChange={(e) => field.handleChange(e.target.value)} name={field.name} type="text" />
+                                <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.name && state?.errors.name[0]}</p>
                             </div>)
                         }
                     </form.Field>
-                    <form.Field name="color" onChange={z.enum(["red"])}>
-                        {(field) => (<div className="form-control">
-                            <label className="label" htmlFor={field.name}>Color</label>
-                            <select id={field.name} name={field.name} className="select select-bordered">
-                                <option>red</option>
-                                <option>red</option>
-                                <option>red</option>
-                                <option>red</option>
-                            </select>
-                        </div>)}
-                    </form.Field>
-                    <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+                    <form.Subscribe selector={(state) => [state.canSubmit]}>
                         {
-                            ([canSubmit, isSubmitting]) => (
+                            ([canSubmit]) => (
                                 <div className="modal-action">
                                     <button form="dialog" className="btn">Cancel</button>
-                                    <button className="btn btn-primary" disabled={!canSubmit}>Create</button>
+                                    <SubmitButton label="Create" canSubmit={canSubmit} />
                                 </div>)
                         }
                     </form.Subscribe>
