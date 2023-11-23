@@ -30,7 +30,7 @@ export default function NavLinks() {
         <nav className="mt-20">
             <ul className="menu">
                 {
-                    navigationLinks.map((link, index) => <li className={clsx(pathname === link.href && "active")} key={index}><Link className="flex items-center" href={link.href}>{link.icon} {link.label}</Link></li>)
+                    navigationLinks.map((link, index) => <li key={index}><Link className={clsx("flex items-center", pathname === link.href && "active")} href={link.href}>{link.icon} {link.label}</Link></li>)
                 }
             </ul>
         </nav>

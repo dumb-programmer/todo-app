@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import createProject from "../lib/actions";
+import { createProject } from "../lib/actions";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";

@@ -7,8 +7,8 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { SignJWT } from "jose";
 import getUser from "./getUser";
-import { prisma } from "./prisma";
-import { Prisma } from "@prisma/client";
+import prisma from "./prisma";
+import { Priority, Prisma } from "@prisma/client";
 
 const UserSchema = z.object({
   email: z.string().email(),
@@ -88,10 +88,7 @@ const projectSchema = z.object({
     .min(3, { message: "Name must contain atleast 3 characters" }),
 });
 
-export default async function createProject(
-  prevState: any,
-  formData: FormData
-) {
+export async function createProject(prevState: any, formData: FormData) {
   const project = Object.fromEntries(formData);
   const parsed = projectSchema.safeParse(project);
   if (!parsed.success) {
@@ -102,4 +99,42 @@ export default async function createProject(
     data: { name: parsed.data.name, userId: email },
   });
   revalidatePath("/");
+}
+
+const todoSchema = z.object({
+  title: z.string().min(3, "Title must have atleast 3 characters"),
+  description: z.string(),
+  due: z.string().transform((data) => {
+    const date = new Date(data);
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date format");
+    }
+    return date;
+  }),
+  priority: z.nativeEnum(Priority),
+});
+
+export async function createTodo(
+  projectId: string,
+  prevState: any,
+  formData: FormData
+) {
+  const todo = Object.fromEntries(formData);
+  const parsed = todoSchema.safeParse(todo);
+  if (!parsed.success) {
+    return { errors: parsed.error.flatten().fieldErrors };
+  }
+  const { email } = await getUser();
+  // await prisma.todo.create({
+  //   data: {
+  //     title: parsed.data.title,
+  //     description: parsed.data.description,
+  //     due: parsed.data.due,
+  //     priority: parsed.data.priority,
+  //     projectId,
+  //     userId: email,
+  //   },
+  // });
+  revalidatePath(`/projects/${projectId}`);
+  return { success: true };
 }

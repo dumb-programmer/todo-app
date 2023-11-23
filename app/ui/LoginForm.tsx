@@ -23,7 +23,7 @@ export default function LoginForm() {
                 {
                     (field) => (<div className="form-control relative">
                         <label className="label" htmlFor={field.name}>Email</label>
-                        <input className={clsx("input input-bordered", field.state.meta.errors.length > 0 || state?.errors.email && "input-error border-error")} type="email" id="email" name={field.name} value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} required />
+                        <input className={clsx("input input-bordered", field.state.meta.errors.length > 0 || state?.errors.email && "input-error border-error")} type="email" id="email" name={field.name} onChange={(e) => field.handleChange(e.target.value)} required />
                         {field.state.meta.isValidating && <div className="loading h-25 w-25 absolute top-[50px] right-2"></div>}
                         <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.email && state?.errors.email[0]}</p>
                     </div>)
@@ -33,7 +33,7 @@ export default function LoginForm() {
                 {
                     (field) => (<div className="form-control">
                         <label className="label" htmlFor={field.name}>Password</label>
-                        <input className={clsx("input input-bordered", field.state.meta.errors.length > 0 || state?.errors.password && "input-error border-error")} type="password" id="password" name={field.name} value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} required />
+                        <input className={clsx("input input-bordered", field.state.meta.errors.length > 0 || state?.errors.password && "input-error border-error")} type="password" id="password" name={field.name} onChange={(e) => field.handleChange(e.target.value)} required />
                         <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.password && state?.errors.password[0]}</p>
                     </div>)
                 }

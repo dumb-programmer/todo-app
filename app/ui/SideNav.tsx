@@ -1,4 +1,4 @@
-import getProjects from "../lib/data";
+import { getProjects } from "../lib/data";
 import NavLinks from "./NavLinks";
 import ProjectsPanel from "./ProjectsPanel";
 
