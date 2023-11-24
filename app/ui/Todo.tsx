@@ -2,6 +2,7 @@ import { CalendarIcon, FlagIcon } from "@heroicons/react/20/solid";
 import { Priority, Todo } from "@prisma/client";
 import TodoCheckbox from "./TodoCheckbox";
 import EditTodoButton from "./EditTodoButton";
+import DeleteTodoButton from "./DeleteTodoButton";
 
 function getPriority(priority: Priority) {
     switch (priority) {
@@ -36,6 +37,7 @@ export default function Todo({ todo }: { todo: Todo }) {
         </div>
         <div className="flex gap-2">
             <EditTodoButton todo={todo} />
+            <DeleteTodoButton todoId={todo.id} />
         </div>
     </div>;
 }
