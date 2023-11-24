@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { cookies } from "next/headers";
 import { SignJWT } from "jose";
 import getUser from "./getUser";
@@ -161,4 +161,13 @@ export async function editProject(
     where: { id: projectId },
   });
   revalidatePath("/");
+}
+
+export async function deleteTodo(
+  todoId: string,
+  pathname: string,
+  formData: FormData
+) {
+  await prisma.todo.delete({ where: { id: todoId } });
+  revalidatePath(pathname);
 }

@@ -1,5 +1,6 @@
 import { CalendarIcon, FlagIcon } from "@heroicons/react/20/solid";
 import { Priority, Todo } from "@prisma/client";
+import TodoCheckbox from "./TodoCheckbox";
 
 function getPriority(priority: Priority) {
     switch (priority) {
@@ -19,7 +20,7 @@ function formatDate(date: Date) {
 export default function Todo({ todo }: { todo: Todo }) {
     return <div className="flex gap-5">
         <div className="mt-5">
-            <input className="checkbox checkbox-primary rounded-3xl" type="checkbox" />
+            <TodoCheckbox todoId={todo.id}/>
         </div>
         <div>
             <h2 className="text-lg">{todo?.title}</h2>
