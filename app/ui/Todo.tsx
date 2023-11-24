@@ -12,6 +12,10 @@ function getPriority(priority: Priority) {
     }
 }
 
+function formatDate(date: Date) {
+    return new Intl.DateTimeFormat("en-PK", { day: "numeric", month: "short", year: "numeric" }).format(date);
+}
+
 export default function Todo({ todo }: { todo: Todo }) {
     return <div className="flex gap-5">
         <div className="mt-5">
@@ -22,7 +26,7 @@ export default function Todo({ todo }: { todo: Todo }) {
             <p className="text-gray-500 text-xs mt-2">{todo?.description}</p>
             <div className="flex gap-2 text-xs mt-2">
                 <CalendarIcon height={15} />
-                <p>{new Intl.DateTimeFormat("en-PK", { day: "numeric", month: "short", year: "numeric" }).format(todo?.due)}</p>
+                <p>{formatDate(todo?.due)}</p>
                 <FlagIcon className="ml-2" height={15} color={getPriority(todo?.priority)} />
             </div>
         </div>

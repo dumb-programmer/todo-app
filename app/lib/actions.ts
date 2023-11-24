@@ -125,16 +125,23 @@ export async function createTodo(
     return { errors: parsed.error.flatten().fieldErrors };
   }
   const { email } = await getUser();
-  // await prisma.todo.create({
-  //   data: {
-  //     title: parsed.data.title,
-  //     description: parsed.data.description,
-  //     due: parsed.data.due,
-  //     priority: parsed.data.priority,
-  //     projectId,
-  //     userId: email,
-  //   },
-  // });
+  await prisma.todo.create({
+    data: {
+      title: parsed.data.title,
+      description: parsed.data.description,
+      due: parsed.data.due,
+      priority: parsed.data.priority,
+      projectId,
+      userId: email,
+    },
+  });
   revalidatePath(`/projects/${projectId}`);
   return { success: true };
+}
+
+export async function deleteProject(projectId: string, formData: FormData) {
+  await prisma.todo.deleteMany({ where: { projectId } });
+  await prisma.project.delete({ where: { id: projectId } });
+  revalidatePath(`/`);
+  redirect("/");
 }

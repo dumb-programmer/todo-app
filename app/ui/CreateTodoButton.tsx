@@ -5,10 +5,10 @@ import CreateTodoForm from "./CreateTodoForm";
 import { useRef } from "react";
 
 export default function CreateTodoButton() {
-    const formRef = useRef<HTMLDialogElement>();
+    const formRef = useRef<HTMLDialogElement>(null);
 
     return <div>
-        <div className="mt-10 flex gap-5">
+        <div className="mt-10 flex gap-5 pb-8">
             <button className="btn btn-xs" onClick={() => formRef.current?.showModal()}><PlusIcon height={20} /></button>
             <p className="text-gray-500">Add task</p>
         </div>

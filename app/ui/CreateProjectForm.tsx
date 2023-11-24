@@ -29,7 +29,7 @@ export default function CreateProjectForm({ formRef }: { formRef: React.MutableR
                         {
                             (field) => (<div className="form-control">
                                 <label className="label" htmlFor={field.name}>Name</label>
-                                <input className={clsx("input input-bordered", state?.errors.name && "input-error")} id={field.name} onChange={(e) => field.handleChange(e.target.value)} name={field.name} type="text" />
+                                <input className={clsx("input input-bordered", state?.errors.name && "input-error")} id={field.name} onChange={(e) => field.handleChange(e.target.value)} name={field.name} type="text" required/>
                                 <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.name && state?.errors.name[0]}</p>
                             </div>)
                         }
