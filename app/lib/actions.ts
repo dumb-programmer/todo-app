@@ -171,3 +171,29 @@ export async function deleteTodo(
   await prisma.todo.delete({ where: { id: todoId } });
   revalidatePath(pathname);
 }
+
+export async function editTodo(
+  todoId: string,
+  path: string,
+  prevState: any,
+  formData: FormData
+) {
+  const todo = Object.fromEntries(formData);
+  const parsed = todoSchema.safeParse(todo);
+  if (!parsed.success) {
+    return { errors: parsed.error.flatten().fieldErrors };
+  }
+  await prisma.todo.update({
+    where: {
+      id: todoId,
+    },
+    data: {
+      title: parsed.data.title,
+      description: parsed.data.description,
+      due: parsed.data.due,
+      priority: parsed.data.priority,
+    },
+  });
+  revalidatePath(path);
+  return { success: true };
+}
