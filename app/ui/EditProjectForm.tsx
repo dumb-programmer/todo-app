@@ -40,7 +40,6 @@ export default function EditProjectForm({ formRef, project }: { formRef: React.M
                                     <button type="submit" className="btn btn-primary" onClick={(e) => {
                                         e.preventDefault();
                                         const form: HTMLFormElement | null = document.querySelector(`#edit-project-${project.id}-form`);
-                                        console.log("Hello");
                                         form?.requestSubmit();
                                     }} >Save</button>
                                 </div>)

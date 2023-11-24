@@ -1,26 +1,28 @@
 "use client";
 
 import React from "react";
-import { deleteTodo } from "../lib/actions";
-import { usePathname } from "next/navigation";
+import { deleteProject } from "../lib/actions";
 
-export default function DeleteTodoForm({ formRef, todoId }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, todoId: string }) {
-    const path = usePathname();
-    const deleteTodoWithId = deleteTodo.bind(null, todoId, path);
+export default function DeleteTodoForm({ formRef, projectId }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, projectId: string }) {
+    const deleteTodoWithId = deleteProject.bind(null, projectId);
 
     return <dialog className="modal" ref={formRef}>
         <div className="modal-box">
-            <form id={`delete-project-${todoId}-form`} action={deleteTodoWithId}>
+            <form id={`delete-project-${projectId}-form`} action={deleteTodoWithId}>
                 <div className="prose">
-                    <h1 className="text-2xl font-bold">Delete Todo</h1>
-                    <p>Are you sure you want to delete this todo? All todos in this project will be deleted. This action is non-recoverable.</p>
+                    <h1 className="text-2xl font-bold">Delete Project</h1>
+                    <p>Are you sure you want to delete this project? All todos in this project will be deleted. This action is non-recoverable.</p>
                 </div>
                 <div className="modal-action">
                     <button type="button" className="btn" onClick={(e) => {
                         e.preventDefault();
                         formRef?.current?.close();
                     }}>Cancel</button>
-                    <button type="submit" className="btn btn-error">Delete</button>
+                    <button type="submit" className="btn btn-error" onClick={(e) => {
+                        e.preventDefault();
+                        const form: HTMLFormElement | null = document.querySelector(`#delete-project-${projectId}-form`);
+                        form?.requestSubmit();
+                    }} >Delete</button>
                 </div>
             </form>
         </div>

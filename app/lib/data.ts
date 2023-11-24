@@ -24,3 +24,11 @@ export async function getTodayTodos() {
     where: { due: { equals: today.toISOString() } },
   });
 }
+
+export async function getUpcomingTodos(){
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  return await prisma.todo.findMany({
+    where: { due: { gt: today.toISOString() } },
+  });
+}

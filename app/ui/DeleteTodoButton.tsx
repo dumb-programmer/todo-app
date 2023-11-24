@@ -2,7 +2,7 @@
 
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { useRef } from "react";
-import DeleteTodoForm from "./DeleteProjectForm";
+import DeleteTodoForm from "./DeleteTodoForm";
 
 
 export default function DeleteTodoButton({ todoId }: { todoId: string }) {
