@@ -145,3 +145,20 @@ export async function deleteProject(projectId: string, formData: FormData) {
   revalidatePath(`/`);
   redirect("/");
 }
+
+export async function editProject(
+  projectId: string,
+  prevState: any,
+  formData: FormData
+) {
+  const project = Object.fromEntries(formData);
+  const parsed = projectSchema.safeParse(project);
+  if (!parsed.success) {
+    return { errors: parsed.error.flatten().fieldErrors };
+  }
+  await prisma.project.update({
+    data: { name: parsed.data.name },
+    where: { id: projectId },
+  });
+  revalidatePath("/");
+}
