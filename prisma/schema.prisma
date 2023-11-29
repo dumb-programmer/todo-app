@@ -40,14 +40,24 @@ model Todo {
 }
 
 model Activity {
-  id        String   @id
-  timeStamp DateTime
-  user      User     @relation(fields: [userId], references: [email])
-  userId    String
+  id          String       @id @default(uuid())
+  type        ActivityType
+  description String
+  timeStamp   DateTime     @default(now())
+  projectName String?
+  user        User         @relation(fields: [userId], references: [email])
+  userId      String
 }
 
 enum Priority {
   HIGH
   MEDIUM
   LOW
+}
+
+enum ActivityType {
+  CREATE
+  EDIT
+  DELETE
+  DONE
 }

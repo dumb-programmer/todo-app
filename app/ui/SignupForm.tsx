@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { z } from "zod";
 import { signup } from "../lib/actions";
 import { useFormState } from "react-dom";
+import SubmitButton from "./SubmitButton";
 
 export default function SignupForm() {
     const form = useForm({
@@ -53,10 +54,10 @@ export default function SignupForm() {
                     </div>)
                 }
             </form.Field>
-            <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitted]}>
+            <form.Subscribe selector={(state) => [state.canSubmit]}>
                 {
-                    ([canSubmit, isSubmitted]) => (<div className="form-control mt-5">
-                        <button className="btn btn-primary" disabled={!canSubmit}>Signup</button>
+                    ([canSubmit]) => (<div className="form-control mt-5">
+                        <SubmitButton label="Signup" canSubmit={canSubmit} />
                     </div>)
                 }
             </form.Subscribe>

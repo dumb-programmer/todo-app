@@ -20,7 +20,7 @@ function getToday() {
 }
 
 
-export default function CreateTodoForm({ formRef } : {formRef: React.MutableRefObject<HTMLDialogElement | null>}) {
+export default function CreateTodoForm({ formRef }: { formRef: React.MutableRefObject<HTMLDialogElement | null> }) {
     const form = useForm({
         defaultValues: {
             title: "",
@@ -33,7 +33,7 @@ export default function CreateTodoForm({ formRef } : {formRef: React.MutableRefO
     const { id } = useParams();
     const createTodoWithProjectId = createTodo.bind(null, Array.isArray(id) ? id[0] : id);
     const [state, action] = useFormState(createTodoWithProjectId, null);
-    
+
     useEffect(() => {
         if (state?.success) {
             form.reset();
@@ -51,7 +51,12 @@ export default function CreateTodoForm({ formRef } : {formRef: React.MutableRefO
                         {
                             (field) => (<div className="form-control">
                                 <label className="label" htmlFor={field.name}>Title</label>
-                                <input name={field.name} id={field.name} className={clsx("input input-bordered", state?.errors?.title && "input-error")} type="text" onChange={(e) => field.handleChange(e.target.value)} required />
+                                <input type="text"
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    className={clsx("input input-bordered", state?.errors?.title && "input-error")}
+                                    onChange={(e) => field.handleChange(e.target.value)} required />
                                 <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.title && state?.errors.title[0]}</p>
                             </div>)
                         }
@@ -60,7 +65,11 @@ export default function CreateTodoForm({ formRef } : {formRef: React.MutableRefO
                         {
                             (field) => (<div className="form-control">
                                 <label className="label" htmlFor={field.name}>Description</label>
-                                <textarea name={field.name} id={field.name} className={clsx("textarea textarea-bordered", state?.errors?.description && "input-error")} onChange={(e) => field.handleChange(e.target.value)}></textarea>
+                                <textarea name={field.name}
+                                    id={field.name}
+                                    value={field.state.value}
+                                    className={clsx("textarea textarea-bordered", state?.errors?.description && "input-error")}
+                                    onChange={(e) => field.handleChange(e.target.value)}></textarea>
                                 <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.description && state?.errors.description[0]}</p>
                             </div>)
                         }
@@ -78,7 +87,7 @@ export default function CreateTodoForm({ formRef } : {formRef: React.MutableRefO
                         {
                             (field) => (<div className="form-control">
                                 <label className="label" htmlFor={field.name}>Priority</label>
-                                <select name={field.name} id={field.name} defaultValue="HIGH" className={clsx("select select-bordered", state?.errors?.priority && "input-error")} onChange={(e) => field.handleChange(e.target.value)} required >
+                                <select name={field.name} id={field.name} value={field.state.value} defaultValue="HIGH" className={clsx("select select-bordered", state?.errors?.priority && "input-error")} onChange={(e) => field.handleChange(e.target.value)} required >
                                     <option value="HIGH">High</option>
                                     <option value="MEDIUM">Medium</option>
                                     <option value="LOW">Low</option>

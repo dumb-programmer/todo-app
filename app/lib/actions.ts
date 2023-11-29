@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import { SignJWT } from "jose";
 import getUser from "./getUser";
 import prisma from "./prisma";
-import { Priority, Prisma } from "@prisma/client";
+import { ActivityType, Priority, Prisma, Project } from "@prisma/client";
 
 const UserSchema = z.object({
   email: z.string().email(),
@@ -98,7 +98,15 @@ export async function createProject(prevState: any, formData: FormData) {
   await prisma.project.create({
     data: { name: parsed.data.name, userId: email },
   });
+  await prisma.activity.create({
+    data: {
+      type: ActivityType.CREATE,
+      description: `Created project "${parsed.data.name}"`,
+      userId: email,
+    },
+  });
   revalidatePath("/");
+  return { success: true };
 }
 
 const todoSchema = z.object({
@@ -125,7 +133,7 @@ export async function createTodo(
     return { errors: parsed.error.flatten().fieldErrors };
   }
   const { email } = await getUser();
-  await prisma.todo.create({
+  const todoDB = await prisma.todo.create({
     data: {
       title: parsed.data.title,
       description: parsed.data.description,
@@ -134,6 +142,17 @@ export async function createTodo(
       projectId,
       userId: email,
     },
+    include: {
+      project: true,
+    },
+  });
+  await prisma.activity.create({
+    data: {
+      type: ActivityType.CREATE,
+      description: `Created Todo: ${todoDB.title}`,
+      projectName: todoDB.project.name,
+      userId: todoDB.userId,
+    },
   });
   revalidatePath(`/projects/${projectId}`);
   return { success: true };
@@ -141,26 +160,43 @@ export async function createTodo(
 
 export async function deleteProject(projectId: string, formData: FormData) {
   await prisma.todo.deleteMany({ where: { projectId } });
-  await prisma.project.delete({ where: { id: projectId } });
+  const project = await prisma.project.delete({ where: { id: projectId } });
+  const { email } = await getUser();
+  await prisma.activity.create({
+    data: {
+      type: ActivityType.DELETE,
+      description: `Deleted project: ${project.name}`,
+      userId: email,
+    },
+  });
   revalidatePath(`/`);
   redirect("/");
 }
 
 export async function editProject(
-  projectId: string,
+  project: Omit<Project, "userId">,
   prevState: any,
   formData: FormData
 ) {
-  const project = Object.fromEntries(formData);
-  const parsed = projectSchema.safeParse(project);
+  const newProject = Object.fromEntries(formData);
+  const parsed = projectSchema.safeParse(newProject);
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
   }
   await prisma.project.update({
+    where: { id: project.id },
     data: { name: parsed.data.name },
-    where: { id: projectId },
+  });
+  const { email } = await getUser();
+  await prisma.activity.create({
+    data: {
+      type: ActivityType.EDIT,
+      description: `Renamed project: ${project.name} to ${parsed.data.name}`,
+      userId: email,
+    },
   });
   revalidatePath("/");
+  return { success: true };
 }
 
 export async function deleteTodo(
@@ -168,7 +204,19 @@ export async function deleteTodo(
   pathname: string,
   formData: FormData
 ) {
-  await prisma.todo.delete({ where: { id: todoId } });
+  const todo = await prisma.todo.delete({
+    where: { id: todoId },
+    include: { project: true },
+  });
+  const { email } = await getUser();
+  await prisma.activity.create({
+    data: {
+      type: ActivityType.DELETE,
+      description: `Deleted todo: ${todo.title}`,
+      projectName: todo.project.name,
+      userId: email,
+    },
+  });
   revalidatePath(pathname);
 }
 
@@ -183,7 +231,7 @@ export async function editTodo(
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
   }
-  await prisma.todo.update({
+  const newTodo = await prisma.todo.update({
     where: {
       id: todoId,
     },
@@ -192,6 +240,18 @@ export async function editTodo(
       description: parsed.data.description,
       due: parsed.data.due,
       priority: parsed.data.priority,
+    },
+    include: {
+      project: true,
+    },
+  });
+  const { email } = await getUser();
+  await prisma.activity.create({
+    data: {
+      type: ActivityType.EDIT,
+      description: `Edited todo: ${todo.title}`,
+      projectName: newTodo.project.name,
+      userId: email,
     },
   });
   revalidatePath(path);

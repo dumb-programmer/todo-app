@@ -7,8 +7,9 @@ import { zodValidator } from "@tanstack/zod-form-adapter";
 import { z } from "zod";
 import clsx from "clsx";
 import SubmitButton from "./SubmitButton";
+import { useEffect } from "react";
 
-export default function CreateProjectForm({ formRef }: { formRef: React.MutableRefObject<HTMLDialogElement | undefined> }) {
+export default function CreateProjectForm({ formRef }: { formRef: React.MutableRefObject<HTMLDialogElement | null> }) {
     const form = useForm({
         defaultValues: {
             name: "",
@@ -18,8 +19,15 @@ export default function CreateProjectForm({ formRef }: { formRef: React.MutableR
 
     const [state, formAction] = useFormState(createProject, null);
 
+    useEffect(() => {
+        if (state?.success) {
+            form.reset();
+            formRef.current?.close();
+        }
+    }, [state, form, formRef]);
+
     return <dialog className="modal" ref={formRef}>
-        <div className="modal-box">
+        <div className="modal-box prose">
             <form id="dialog" method="dialog">
             </form>
             <form.Provider>
@@ -29,7 +37,12 @@ export default function CreateProjectForm({ formRef }: { formRef: React.MutableR
                         {
                             (field) => (<div className="form-control">
                                 <label className="label" htmlFor={field.name}>Name</label>
-                                <input className={clsx("input input-bordered", state?.errors.name && "input-error")} id={field.name} onChange={(e) => field.handleChange(e.target.value)} name={field.name} type="text" required/>
+                                <input type="text"
+                                    className={clsx("input input-bordered", state?.errors?.name && "input-error")}
+                                    id={field.name}
+                                    name={field.name}
+                                    value={field.state.value}
+                                    onChange={(e) => field.handleChange(e.target.value)} required />
                                 <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.name && state?.errors.name[0]}</p>
                             </div>)
                         }

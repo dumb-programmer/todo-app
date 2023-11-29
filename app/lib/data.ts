@@ -25,10 +25,18 @@ export async function getTodayTodos() {
   });
 }
 
-export async function getUpcomingTodos(){
+export async function getUpcomingTodos() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   return await prisma.todo.findMany({
     where: { due: { gt: today.toISOString() } },
+  });
+}
+
+export async function getActivities() {
+  const { email } = await getUser();
+  return await prisma.activity.findMany({
+    where: { userId: email },
+    orderBy: { timeStamp: "desc" },
   });
 }

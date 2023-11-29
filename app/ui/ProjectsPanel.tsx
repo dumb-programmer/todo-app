@@ -8,7 +8,7 @@ import { Project } from "@prisma/client";
 
 
 export default function ProjectsPanel({ projects }: { projects: Omit<Project, "userId">[] }) {
-    const formRef = useRef<HTMLDialogElement>();
+    const formRef = useRef<HTMLDialogElement>(null);
     const [showProjects, setShowProjects] = useState(true);
 
     return <>

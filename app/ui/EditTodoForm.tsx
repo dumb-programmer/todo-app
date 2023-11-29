@@ -54,7 +54,9 @@ export default function EditTodoForm({ formRef, todo }: { formRef: React.Mutable
                         {
                             (field) => (<div className="form-control">
                                 <label className="label" htmlFor={field.name}>Title</label>
-                                <input type="text" name={field.name} id={field.name}
+                                <input type="text"
+                                    name={field.name}
+                                    id={field.name}
                                     className={clsx("input input-bordered", state?.errors?.title && "input-error")}
                                     value={field.state.value}
                                     onBlur={field.handleBlur}
@@ -68,7 +70,9 @@ export default function EditTodoForm({ formRef, todo }: { formRef: React.Mutable
                         {
                             (field) => (<div className="form-control">
                                 <label className="label" htmlFor={field.name}>Description</label>
-                                <textarea name={field.name} id={field.name} className={clsx("textarea textarea-bordered", state?.errors?.description && "input-error")}
+                                <textarea name={field.name}
+                                    id={field.name}
+                                    className={clsx("textarea textarea-bordered", state?.errors?.description && "input-error")}
                                     value={field.state.value}
                                     onBlur={field.handleBlur}
                                     onChange={(e) => field.handleChange(e.target.value)}></textarea>
@@ -76,16 +80,18 @@ export default function EditTodoForm({ formRef, todo }: { formRef: React.Mutable
                             </div>)
                         }
                     </form.Field>
-                    <form.Field name="due" onChange={z.string()}>
+                    <form.Field name="due" onChange={z.date()}>
                         {
                             (field) => (<div className="form-control">
                                 <label htmlFor={field.name}>Due</label>
-                                <input type="date" className={clsx("input input-bordered", state?.errors?.due && "input-error")}
+                                <input type="date"
                                     name={field.name}
                                     id={field.name}
+                                    className={clsx("input input-bordered", state?.errors?.due && "input-error")}
                                     value={formatDate(field.state.value)}
                                     min={getToday()}
-                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(new Date(e.target.value))}
                                     required />
                                 <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.due && state?.errors.due[0]}</p>
                             </div>)
@@ -99,7 +105,8 @@ export default function EditTodoForm({ formRef, todo }: { formRef: React.Mutable
                                     className={clsx("select select-bordered", state?.errors?.priority && "input-error")}
                                     id={field.name}
                                     value={field.state.value}
-                                    onChange={(e) => field.handleChange(e.target.value)} required >
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value as Priority)} required >
                                     <option value="HIGH">High</option>
                                     <option value="MEDIUM">Medium</option>
                                     <option value="LOW">Low</option>
