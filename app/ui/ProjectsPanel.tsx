@@ -1,13 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
-import CreateProjectForm from "./CreateProjectForm";
-import ProjectLink from "./ProjectLink";
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { Project } from "@prisma/client";
+import ProjectLinksList from "./ProjectLinksList";
 
 
-export default function ProjectsPanel({ projects }: { projects: Omit<Project, "userId">[] }) {
+export default function ProjectsPanel({ projects }: { projects: { rows: Project[], hasMore: boolean } }) {
     const formRef = useRef<HTMLDialogElement>(null);
     const [showProjects, setShowProjects] = useState(true);
 
@@ -20,14 +19,7 @@ export default function ProjectsPanel({ projects }: { projects: Omit<Project, "u
                     <button className="btn btn-sm" onClick={() => setShowProjects(showProjects => !showProjects)}>{showProjects ? <ChevronDownIcon height={20} /> : <ChevronUpIcon height={20} />}</button>
                 </div>
             </div>
-            {
-                showProjects && <ul className="menu">
-                    {
-                        projects.map(project => <ProjectLink key={project.id} project={project} />)
-                    }
-                </ul>
-            }
+            <ProjectLinksList  projects={projects} formRef={formRef} showProjects={showProjects} />
         </div>
-        <CreateProjectForm formRef={formRef} />
     </>;
 }

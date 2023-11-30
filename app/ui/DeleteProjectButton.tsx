@@ -5,7 +5,7 @@ import { useRef } from "react";
 import DeleteProjectForm from "./DeleteProjectForm";
 
 
-export default function DeleteProjectButton({ projectId }: { projectId: string }) {
+export default function DeleteProjectButton({ projectId, onDelete }: { projectId: string, onDelete: (id: string) => void }) {
     const formRef = useRef<HTMLDialogElement>(null);
 
     return <>
@@ -15,6 +15,6 @@ export default function DeleteProjectButton({ projectId }: { projectId: string }
         }}>
             <TrashIcon height={12} color="red" />
         </button>
-        <DeleteProjectForm formRef={formRef} projectId={projectId} />
+        <DeleteProjectForm formRef={formRef} projectId={projectId} onDelete={onDelete} />
     </>;
 }

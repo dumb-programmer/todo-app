@@ -8,8 +8,9 @@ import { z } from "zod";
 import clsx from "clsx";
 import SubmitButton from "./SubmitButton";
 import { useEffect } from "react";
+import { Project } from "@prisma/client";
 
-export default function CreateProjectForm({ formRef }: { formRef: React.MutableRefObject<HTMLDialogElement | null> }) {
+export default function CreateProjectForm({ formRef, onSuccess }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, onSuccess: (project: Project) => void }) {
     const form = useForm({
         defaultValues: {
             name: "",
@@ -23,8 +24,9 @@ export default function CreateProjectForm({ formRef }: { formRef: React.MutableR
         if (state?.success) {
             form.reset();
             formRef.current?.close();
+            onSuccess(state.data);
         }
-    }, [state, form, formRef]);
+    }, [state, form, formRef, onSuccess]);
 
     return <dialog className="modal" ref={formRef}>
         <div className="modal-box prose">

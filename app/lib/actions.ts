@@ -95,7 +95,7 @@ export async function createProject(prevState: any, formData: FormData) {
     return { errors: parsed.error.flatten().fieldErrors };
   }
   const { email } = await getUser();
-  await prisma.project.create({
+  const projectDB = await prisma.project.create({
     data: { name: parsed.data.name, userId: email },
   });
   await prisma.activity.create({
@@ -106,7 +106,7 @@ export async function createProject(prevState: any, formData: FormData) {
     },
   });
   revalidatePath("/");
-  return { success: true };
+  return { success: true, data: projectDB };
 }
 
 const todoSchema = z.object({
@@ -158,7 +158,12 @@ export async function createTodo(
   return { success: true, data: todoDB };
 }
 
-export async function deleteProject(projectId: string, formData: FormData) {
+export async function deleteProject(
+  projectId: string,
+  prevState: any,
+  formData: FormData
+) {
+  console.log("Server delete action");
   await prisma.todo.deleteMany({ where: { projectId } });
   const project = await prisma.project.delete({ where: { id: projectId } });
   const { email } = await getUser();
@@ -170,7 +175,7 @@ export async function deleteProject(projectId: string, formData: FormData) {
     },
   });
   revalidatePath(`/`);
-  redirect("/");
+  return { success: true };
 }
 
 export async function editProject(
@@ -183,7 +188,7 @@ export async function editProject(
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
   }
-  await prisma.project.update({
+  const updatedProject = await prisma.project.update({
     where: { id: project.id },
     data: { name: parsed.data.name },
   });
@@ -196,7 +201,7 @@ export async function editProject(
     },
   });
   revalidatePath("/");
-  return { success: true };
+  return { success: true, data: updatedProject };
 }
 
 export async function deleteTodo(

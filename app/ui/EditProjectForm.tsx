@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { Project } from "@prisma/client";
 import { useEffect } from "react";
 
-export default function EditProjectForm({ formRef, project }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, project: Omit<Project, "userId"> }) {
+export default function EditProjectForm({ formRef, project, onEdit }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, project: Project, onEdit: (project: Project) => void }) {
     const form = useForm({
         defaultValues: {
             name: project.name,
@@ -22,9 +22,10 @@ export default function EditProjectForm({ formRef, project }: { formRef: React.M
     useEffect(() => {
         if (state?.success) {
             form.reset();
+            onEdit(state.data)
             formRef.current?.close();
         }
-    }, [state, form, formRef]);
+    }, [state, form, formRef, onEdit]);
 
     return <dialog className="modal" ref={formRef}>
         <div className="modal-box prose">

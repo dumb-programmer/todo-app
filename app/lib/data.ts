@@ -3,12 +3,15 @@ import prisma from "./prisma";
 
 const LIMIT = 5;
 
-export async function getProjects() {
+export async function getProjects(page: number = 1) {
   const { email } = await getUser();
-  return await prisma.project.findMany({
-    select: { id: true, name: true },
+  const projects = await prisma.project.findMany({
     where: { userId: email },
+    skip: (page - 1) * LIMIT,
+    take: LIMIT + 1,
   });
+
+  return { rows: projects.slice(0, 4), hasMore: projects.length === 6 };
 }
 
 export async function getProject(id: string) {

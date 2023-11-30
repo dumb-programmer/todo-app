@@ -6,7 +6,7 @@ import { Project } from "@prisma/client";
 import EditProjectForm from "./EditProjectForm";
 
 
-export default function EditProjectButton({ project }: { project: Omit<Project, "userId"> }) {
+export default function EditProjectButton({ project, onEdit }: { project: Project, onEdit: (project: Project) => void }) {
     const formRef = useRef<HTMLDialogElement>(null);
 
     return <>
@@ -16,6 +16,6 @@ export default function EditProjectButton({ project }: { project: Omit<Project, 
         }}>
             <PencilIcon height={12} />
         </button>
-        <EditProjectForm formRef={formRef} project={project} />
+        <EditProjectForm formRef={formRef} project={project} onEdit={onEdit} />
     </>;
 }
