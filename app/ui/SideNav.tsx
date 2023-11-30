@@ -5,7 +5,7 @@ import ProjectsPanel from "./ProjectsPanel";
 export default async function SideNav() {
     const projects = await getProjects();
 
-    return <aside className="w-1/4 max-w-lg bg-gray-50">
+    return <aside className="w-1/4 max-w-lg">
         <NavLinks />
         <ProjectsPanel projects={projects} />
     </aside>;

@@ -6,7 +6,7 @@ import { Todo } from "@prisma/client";
 import EditTodoForm from "./EditTodoForm";
 
 
-export default function EditTodoButton({ todo }: { todo: Todo }) {
+export default function EditTodoButton({ todo, onEdit }: { todo: Todo, onEdit: (todo: Todo) => void }) {
     const formRef = useRef<HTMLDialogElement>(null);
     return <>
         <button className="btn btn-xs" onClick={(e) => {
@@ -15,6 +15,6 @@ export default function EditTodoButton({ todo }: { todo: Todo }) {
         }}>
             <PencilIcon height={15} />
         </button>
-        <EditTodoForm formRef={formRef} todo={todo} />
+        <EditTodoForm formRef={formRef} todo={todo} onEdit={onEdit} />
     </>;
 }

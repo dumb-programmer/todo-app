@@ -33,6 +33,7 @@ model Todo {
   due         DateTime
   priority    Priority
   done        Boolean  @default(false)
+  createdAt   DateTime @default(now())
   project     Project  @relation(fields: [projectId], references: [id])
   projectId   String
   user        User     @relation(fields: [userId], references: [email])

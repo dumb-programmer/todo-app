@@ -5,7 +5,7 @@ import { useRef } from "react";
 import DeleteTodoForm from "./DeleteTodoForm";
 
 
-export default function DeleteTodoButton({ todoId }: { todoId: string }) {
+export default function DeleteTodoButton({ todoId, onDelete }: { todoId: string, onDelete: (id: string) => void }) {
     const formRef = useRef<HTMLDialogElement>(null);
 
     return <>
@@ -15,6 +15,6 @@ export default function DeleteTodoButton({ todoId }: { todoId: string }) {
         }}>
             <TrashIcon height={15} color="red" />
         </button>
-        <DeleteTodoForm formRef={formRef} todoId={todoId} />
+        <DeleteTodoForm formRef={formRef} todoId={todoId} onDelete={onDelete} />
     </>;
 }

@@ -7,7 +7,7 @@ import SubmitButton from "./SubmitButton";
 import { useParams } from "next/navigation";
 import { createTodo } from "../lib/actions";
 import { useFormState } from "react-dom";
-import { Priority } from "@prisma/client";
+import { Priority, Todo } from "@prisma/client";
 import React, { useEffect } from "react";
 import clsx from "clsx";
 
@@ -20,7 +20,7 @@ function getToday() {
 }
 
 
-export default function CreateTodoForm({ formRef }: { formRef: React.MutableRefObject<HTMLDialogElement | null> }) {
+export default function CreateTodoForm({ formRef, onSuccess }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, onSuccess: (todo: Todo) => void }) {
     const form = useForm({
         defaultValues: {
             title: "",
@@ -37,9 +37,10 @@ export default function CreateTodoForm({ formRef }: { formRef: React.MutableRefO
     useEffect(() => {
         if (state?.success) {
             form.reset();
+            onSuccess(state.data);
             formRef.current?.close();
         }
-    }, [state, form, formRef]);
+    }, [state, form, onSuccess, formRef]);
 
     return <dialog className="modal" ref={formRef}>
         <div className="modal-box">

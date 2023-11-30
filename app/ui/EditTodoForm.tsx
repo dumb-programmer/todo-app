@@ -24,7 +24,7 @@ function formatDate(date: Date) {
 }
 
 
-export default function EditTodoForm({ formRef, todo }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, todo: Todo }) {
+export default function EditTodoForm({ formRef, todo, onEdit }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, todo: Todo, onEdit: (todo: Todo) => void }) {
     const form = useForm({
         defaultValues: {
             title: todo.title,
@@ -41,9 +41,10 @@ export default function EditTodoForm({ formRef, todo }: { formRef: React.Mutable
     useEffect(() => {
         if (state?.success) {
             form.reset();
+            onEdit(state.data);
             formRef.current?.close();
         }
-    }, [state, form, formRef]);
+    }, [state, form, formRef, onEdit]);
 
     return <dialog className="modal" ref={formRef}>
         <div className="modal-box prose">
@@ -88,7 +89,7 @@ export default function EditTodoForm({ formRef, todo }: { formRef: React.Mutable
                                     name={field.name}
                                     id={field.name}
                                     className={clsx("input input-bordered", state?.errors?.due && "input-error")}
-                                    value={formatDate(field.state.value)}
+                                    // value={formatDate(mew Date(field.state.value))}
                                     min={getToday()}
                                     onBlur={field.handleBlur}
                                     onChange={(e) => field.handleChange(new Date(e.target.value))}

@@ -155,7 +155,7 @@ export async function createTodo(
     },
   });
   revalidatePath(`/projects/${projectId}`);
-  return { success: true };
+  return { success: true, data: todoDB };
 }
 
 export async function deleteProject(projectId: string, formData: FormData) {
@@ -202,6 +202,7 @@ export async function editProject(
 export async function deleteTodo(
   todoId: string,
   pathname: string,
+  prevState: any,
   formData: FormData
 ) {
   const todo = await prisma.todo.delete({
@@ -218,6 +219,7 @@ export async function deleteTodo(
     },
   });
   revalidatePath(pathname);
+  return { success: true };
 }
 
 export async function editTodo(
@@ -255,5 +257,5 @@ export async function editTodo(
     },
   });
   revalidatePath(path);
-  return { success: true };
+  return { success: true, data: newTodo };
 }

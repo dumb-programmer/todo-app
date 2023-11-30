@@ -22,11 +22,12 @@ export default function ActivityItem({ activity }: { activity: Activity }) {
                 <span>{new Intl.DateTimeFormat("en-PK", { hour: "numeric", minute: "numeric", second: "numeric" }).format(activity.timeStamp)}</span>
                 <p>{activity.description}</p>
             </div>
-            <span className="flex items-center gap-2">
-                <FolderIcon height={20} />
-                <p>{activity?.projectName}</p>
-            </span>
-
+            {
+                activity.projectName && <span className="flex items-center gap-2">
+                    <FolderIcon height={20} />
+                    <p>{activity.projectName}</p>
+                </span>
+            }
         </div>
     )
 }
