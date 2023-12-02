@@ -52,6 +52,18 @@ export async function getUpcomingTodos() {
   return { rows: todoItems.slice(0, 4), hasMore: todoItems.length === 6 };
 }
 
+export async function getOverdueTodos() {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const todoItems = await prisma.todo.findMany({
+    where: { due: { lt: today.toISOString() } },
+    orderBy: { createdAt: "desc" },
+    take: 6,
+  });
+
+  return { rows: todoItems.slice(0, 4), hasMore: todoItems.length === 6 };
+}
+
 export async function getActivities() {
   const { email } = await getUser();
   return await prisma.activity.findMany({

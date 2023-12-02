@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDaysIcon, MegaphoneIcon } from '@heroicons/react/20/solid';
+import { CalendarDaysIcon, ClockIcon, MegaphoneIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -28,6 +28,11 @@ const navigationLinks = [
         label: "Activity",
         href: "/activity",
         icon: <MegaphoneIcon height={18} />
+    },
+    {
+        label: "Overdue",
+        href: "/overdue",
+        icon: <ClockIcon height={18} />
     }
 ]
 
