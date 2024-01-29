@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import DeleteProjectButton from "./DeleteProjectButton";
 import EditProjectButton from "./EditProjectButton";
 
-export default function ProjectLink({ project, onEdit, onDelete }: { project: Project, onEdit: (project: Project) => void, onDelete: (id: string) => void }) {
+export default function ProjectLink({ project, onEdit, onDelete }: { project: Project, onEdit: () => void, onDelete: () => void }) {
     const path = usePathname();
     const url = `/projects/${project.id}`;
 
@@ -14,8 +14,8 @@ export default function ProjectLink({ project, onEdit, onDelete }: { project: Pr
             <Link href={url} className={clsx("flex justify-between gap-5 text-sm", path === url && "active")}>
                 <p>{project.name}</p>
                 <div className="flex gap-2">
-                    <EditProjectButton project={project} onEdit={onEdit} />
-                    <DeleteProjectButton projectId={project.id} onDelete={onDelete} />
+                    <EditProjectButton onClick={onEdit} />
+                    <DeleteProjectButton onDelete={onDelete} />
                 </div>
             </Link>
         </li>

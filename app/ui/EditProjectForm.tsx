@@ -1,61 +1,66 @@
 "use client";
 
-import { useFormState } from "react-dom";
 import { editProject } from "../lib/actions";
-import { useForm } from "@tanstack/react-form";
-import { zodValidator } from "@tanstack/zod-form-adapter";
-import { z } from "zod";
 import clsx from "clsx";
 import { Project } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ProjectSchema } from "../lib/schema";
+import convertToFormData from "../lib/utils/convertToFormData";
+import SubmitButton from "./SubmitButton";
+import { Modal, Header, Content, Action } from "../components/modal";
 import { useEffect } from "react";
 
-export default function EditProjectForm({ formRef, project, onEdit }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, project: Project, onEdit: (project: Project) => void }) {
-    const form = useForm({
+interface Props {
+    editDialog: React.RefObject<HTMLDialogElement>
+    project: Project | undefined
+    onEdit: (project: Project) => void
+    onCancel: () => void
+}
+
+const formId = "edit-project";
+export default function EditProjectForm({ editDialog, project, onEdit, onCancel }: Props) {
+    const { handleSubmit, register, setError, reset, formState: { errors, isSubmitting }, setValue } = useForm({
         defaultValues: {
-            name: project.name,
+            name: project?.name,
         },
-        validator: zodValidator
+        resolver: zodResolver(ProjectSchema)
     });
-    const editProjectWithId = editProject.bind(null, project);
-    const [state, formAction] = useFormState(editProjectWithId, null);
+    const editProjectWithId = editProject.bind(null, project as Project);
 
     useEffect(() => {
-        if (state?.success) {
-            form.reset();
-            onEdit(state.data)
-            formRef.current?.close();
+        if (project) {
+            setValue("name", project?.name)
         }
-    }, [state, form, formRef, onEdit]);
+    }, [project, setValue]);
 
-    return <dialog className="modal" ref={formRef}>
-        <div className="modal-box prose">
-            <form.Provider>
-                <form id={`edit-project-${project.id}-form`} action={formAction}>
-                    <h1 className="font-bold text-2xl">Edit Project</h1>
-                    <form.Field name="name" onChange={z.string().min(3)}>
-                        {
-                            (field) => (<div className="form-control">
-                                <label className="label" htmlFor={field.name}>Name</label>
-                                <input className={clsx("input input-bordered", state?.errors?.name && "input-error")} id={field.name} defaultValue={project.name} onChange={(e) => field.handleChange(e.target.value)} name={field.name} type="text" required />
-                                <p className="text-red-500 text-xs mt-2">{field.state.meta.errors[0] || state?.errors?.name && state?.errors.name[0]}</p>
-                            </div>)
-                        }
-                    </form.Field>
-                    <form.Subscribe selector={(state) => [state.canSubmit]}>
-                        {
-                            ([canSubmit]) => (
-                                <div className="modal-action">
-                                    <button type="button" className="btn" onClick={() => formRef?.current?.close()}>Cancel</button>
-                                    <button type="submit" className="btn btn-primary" onClick={(e) => {
-                                        e.preventDefault();
-                                        const form: HTMLFormElement | null = document.querySelector(`#edit-project-${project.id}-form`);
-                                        form?.requestSubmit();
-                                    }} >Save</button>
-                                </div>)
-                        }
-                    </form.Subscribe>
-                </form>
-            </form.Provider>
-        </div>
-    </dialog>
+    return <Modal dialogRef={editDialog}>
+        <Header>
+            <h1 className="font-bold text-2xl mb-4">Edit Project</h1>
+        </Header>
+        <Content>
+            <form id={formId} onSubmit={handleSubmit(async (data) => {
+                const formData = convertToFormData(data);
+                const result = await editProjectWithId({}, formData);
+                if (result.success) {
+                    reset();
+                    onEdit(result.data)
+                    onCancel();
+                }
+                else if (result.errors?.name) {
+                    setError("name", { message: result.errors.name[0] })
+                }
+            })}>
+                <div className="form-control">
+                    <label className="label" id="name">Name</label>
+                    <input className={clsx("input input-bordered", errors.name?.message && "input-error")} {...register("name")} />
+                    <p className="text-red-500 text-xs mt-2">{errors?.name?.message}</p>
+                </div>
+            </form>
+        </Content>
+        <Action>
+            <button formMethod="dialog" className="btn" onClick={onCancel}>Cancel</button>
+            <SubmitButton label="Save" form={formId} isSubmitting={isSubmitting} />
+        </Action>
+    </Modal>
 }

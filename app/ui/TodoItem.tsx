@@ -19,7 +19,7 @@ function formatDate(date: Date) {
     return new Intl.DateTimeFormat("en-PK", { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
 
-export default function TodoItem({ todo, onEdit, onDelete }: { todo: Todo, onEdit: (todo: Todo) => void, onDelete: (id: string) => void }) {
+export default function TodoItem({ todo, onEdit, onDelete }: { todo: Todo, onEdit: () => void, onDelete: () => void }) {
     return <div className="flex items-center justify-between">
         <div className="flex gap-5">
             <div className="mt-5">
@@ -36,8 +36,8 @@ export default function TodoItem({ todo, onEdit, onDelete }: { todo: Todo, onEdi
             </div>
         </div>
         <div className="flex gap-2">
-            <EditTodoButton todo={todo} onEdit={onEdit} />
-            <DeleteTodoButton todoId={todo.id} onDelete={onDelete} />
+            <EditTodoButton onClick={onEdit} />
+            <DeleteTodoButton onClick={onDelete} />
         </div>
     </div>;
 }

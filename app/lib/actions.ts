@@ -9,11 +9,7 @@ import { SignJWT } from "jose";
 import getUser from "./getUser";
 import prisma from "./prisma";
 import { ActivityType, Priority, Prisma, Project } from "@prisma/client";
-
-const UserSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
+import { ProjectSchema, TodoSchema, UserSchema } from "./schema";
 
 export type State = {
   errors?: {
@@ -82,15 +78,9 @@ export async function login(
   }
 }
 
-const projectSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: "Name must contain atleast 3 characters" }),
-});
-
 export async function createProject(prevState: any, formData: FormData) {
   const project = Object.fromEntries(formData);
-  const parsed = projectSchema.safeParse(project);
+  const parsed = ProjectSchema.safeParse(project);
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
   }
@@ -109,26 +99,13 @@ export async function createProject(prevState: any, formData: FormData) {
   return { success: true, data: projectDB };
 }
 
-const todoSchema = z.object({
-  title: z.string().min(3, "Title must have atleast 3 characters"),
-  description: z.string(),
-  due: z.string().transform((data) => {
-    const date = new Date(data);
-    if (isNaN(date.getTime())) {
-      throw new Error("Invalid date format");
-    }
-    return date;
-  }),
-  priority: z.nativeEnum(Priority),
-});
-
 export async function createTodo(
   projectId: string,
   prevState: any,
   formData: FormData
 ) {
   const todo = Object.fromEntries(formData);
-  const parsed = todoSchema.safeParse(todo);
+  const parsed = TodoSchema.safeParse(todo);
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
   }
@@ -160,8 +137,6 @@ export async function createTodo(
 
 export async function deleteProject(
   projectId: string,
-  prevState: any,
-  formData: FormData
 ) {
   console.log("Server delete action");
   await prisma.todo.deleteMany({ where: { projectId } });
@@ -184,7 +159,7 @@ export async function editProject(
   formData: FormData
 ) {
   const newProject = Object.fromEntries(formData);
-  const parsed = projectSchema.safeParse(newProject);
+  const parsed = ProjectSchema.safeParse(newProject);
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
   }
@@ -207,8 +182,6 @@ export async function editProject(
 export async function deleteTodo(
   todoId: string,
   pathname: string,
-  prevState: any,
-  formData: FormData
 ) {
   const todo = await prisma.todo.delete({
     where: { id: todoId },
@@ -234,7 +207,7 @@ export async function editTodo(
   formData: FormData
 ) {
   const todo = Object.fromEntries(formData);
-  const parsed = todoSchema.safeParse(todo);
+  const parsed = TodoSchema.safeParse(todo);
   if (!parsed.success) {
     return { errors: parsed.error.flatten().fieldErrors };
   }

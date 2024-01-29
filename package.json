@@ -10,10 +10,9 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
+    "@hookform/resolvers": "^3.3.4",
     "@prisma/client": "^5.6.0",
     "@tailwindcss/typography": "^0.5.10",
-    "@tanstack/react-form": "^0.9.0",
-    "@tanstack/zod-form-adapter": "^0.9.0",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
     "clsx": "^2.0.0",
@@ -21,6 +20,7 @@
     "next": "14.0.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.49.3",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
