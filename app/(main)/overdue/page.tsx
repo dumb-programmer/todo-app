@@ -1,9 +1,11 @@
 import { getOverdueTodos } from "@/app/lib/data";
+import getUser from "@/app/lib/getUser";
 import TodoList from "@/app/ui/todo/TodoList";
 
 export default async function Home() {
-    const todoItems = await getOverdueTodos();
-
+    const user = await getUser();
+    const todoItems = await getOverdueTodos(user.email);
+    
     return (
         <div>
             <div>

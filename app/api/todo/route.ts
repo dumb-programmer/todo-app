@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { getTodos } from "@/app/lib/data";
 import { NextRequest } from "next/server";
 import { z } from "zod";
-
-const prisma = new PrismaClient();
 
 const paramsSchema = z.object({
   projectId: z.string().uuid({ message: "projectId must be a uuid" }),
@@ -20,17 +18,8 @@ export async function GET(request: NextRequest) {
   });
   if (parsed.success) {
     const { projectId, page } = parsed.data;
-    const todo = await prisma.todo.findMany({
-      where: { projectId },
-      orderBy: { createdAt: "desc" },
-      skip: (page - 1) * 5,
-      take: 6,
-    });
-    await waitFor(1000);
-    return Response.json({
-      rows: todo.slice(0, 4),
-      hasMore: todo.length === 6,
-    });
+    const todos = await getTodos(projectId, page);
+    return Response.json(todos);
   }
   return Response.json({ message: parsed.error.flatten().fieldErrors });
 }

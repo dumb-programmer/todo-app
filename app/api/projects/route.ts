@@ -1,9 +1,7 @@
+import { getProjects } from "@/app/lib/data";
 import getUser from "@/app/lib/getUser";
-import { PrismaClient } from "@prisma/client";
 import { NextRequest } from "next/server";
 import { z } from "zod";
-
-const prisma = new PrismaClient();
 
 const paramsSchema = z.object({
   page: z.number(),
@@ -14,22 +12,19 @@ function waitFor(time: number) {
 }
 
 export async function GET(request: NextRequest) {
-  const parsed = paramsSchema.safeParse({
-    page: parseInt(request.nextUrl.searchParams.get("page") || ""),
-  });
-  if (parsed.success) {
-    const { page } = parsed.data;
-    const { email } = await getUser();
-    const projects = await prisma.project.findMany({
-      where: { userId: email },
-      skip: (page - 1) * 5,
-      take: 6,
+  const user = await getUser();
+  if (user) {
+    const parsed = paramsSchema.safeParse({
+      page: parseInt(request.nextUrl.searchParams.get("page") || ""),
     });
-    
-    return Response.json({
-      rows: projects.slice(0, 4),
-      hasMore: projects.length === 6,
-    });
+    if (parsed.success) {
+      const { page } = parsed.data;
+      const projects = await getProjects(user.email, page);
+
+      return Response.json(projects);
+    }
+    return Response.json({ message: parsed.error.flatten().fieldErrors });
   }
-  return Response.json({ message: parsed.error.flatten().fieldErrors });
+
+  return Response.json("Forbidden", { status: 403 });
 }

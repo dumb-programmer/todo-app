@@ -1,10 +1,8 @@
-import getUser from "./getUser";
 import prisma from "./prisma";
 
 const LIMIT = 5;
 
-export async function getProjects(page: number = 1) {
-  const { email } = await getUser();
+export async function getProjects(email: string, page: number = 1) {
   const projects = await prisma.project.findMany({
     where: { userId: email },
     skip: (page - 1) * LIMIT,
@@ -28,44 +26,46 @@ export async function getTodos(projectId: string, page: number = 1) {
   return { rows: todoItems.slice(0, 4), hasMore: todoItems.length === 6 };
 }
 
-export async function getTodayTodos() {
+export async function getTodayTodos(email: string, page: number = 1) {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const todoItems = await prisma.todo.findMany({
-    where: { due: { equals: today.toISOString() } },
+    where: { due: { equals: today.toISOString() }, userId: email },
     orderBy: { createdAt: "desc" },
-    take: 6,
+    skip: (page - 1) * LIMIT,
+    take: LIMIT + 1,
   });
 
   return { rows: todoItems.slice(0, 4), hasMore: todoItems.length === 6 };
 }
 
-export async function getUpcomingTodos() {
+export async function getUpcomingTodos(email: string, page: number = 1) {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const todoItems = await prisma.todo.findMany({
-    where: { due: { gt: today.toISOString() } },
+    where: { due: { gt: today.toISOString() }, userId: email },
     orderBy: { createdAt: "desc" },
-    take: 6,
+    skip: (page - 1) * LIMIT,
+    take: LIMIT + 1,
   });
 
   return { rows: todoItems.slice(0, 4), hasMore: todoItems.length === 6 };
 }
 
-export async function getOverdueTodos() {
+export async function getOverdueTodos(email: string, page: number = 1) {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const todoItems = await prisma.todo.findMany({
-    where: { due: { lt: today.toISOString() } },
+    where: { due: { lt: today.toISOString() }, userId: email },
     orderBy: { createdAt: "desc" },
-    take: 6,
+    skip: (page - 1) * LIMIT,
+    take: LIMIT + 1,
   });
 
   return { rows: todoItems.slice(0, 4), hasMore: todoItems.length === 6 };
 }
 
-export async function getActivities() {
-  const { email } = await getUser();
+export async function getActivities(email: string) {
   return await prisma.activity.findMany({
     where: { userId: email },
     orderBy: { timeStamp: "desc" },

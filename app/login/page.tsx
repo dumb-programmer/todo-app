@@ -1,5 +1,5 @@
 import Link from "next/link";
-import LoginForm from "../ui/LoginForm";
+import LoginForm from "@/app/ui/LoginForm";
 
 export default function Page() {
     return <main className="h-screen flex justify-center items-center">

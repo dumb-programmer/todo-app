@@ -1,10 +1,12 @@
 import { getActivities } from "@/app/lib/data";
+import getUser from "@/app/lib/getUser";
 import ActivityHeader from "@/app/ui/activity/ActivityHeader";
 import ActivityList from "@/app/ui/activity/ActivityList";
 import { Activity } from "@prisma/client";
 
 export default async function Page() {
-    const activities = await getActivities();
+    const user = await getUser();
+    const activities = await getActivities(user.email);
 
     const groupedActivities = activities.reduce((result: { [index: string]: Activity[] }, activity) => {
         const date = activity.timeStamp.toISOString().split("T")[0]

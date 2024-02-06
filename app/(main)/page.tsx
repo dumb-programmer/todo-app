@@ -1,8 +1,10 @@
 import { getTodayTodos } from "../lib/data";
 import TodoList from "@/app/ui/todo/TodoList";
+import getUser from "../lib/getUser";
 
 export default async function Home() {
-  const todoItems = await getTodayTodos();
+  const user = await getUser();
+  const todoItems = await getTodayTodos(user.email);
 
   return (
     <div>

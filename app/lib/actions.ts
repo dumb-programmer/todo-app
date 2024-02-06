@@ -1,14 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import bcrypt from "bcrypt";
-import { redirect, usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { SignJWT } from "jose";
 import getUser from "./getUser";
 import prisma from "./prisma";
-import { ActivityType, Priority, Prisma, Project } from "@prisma/client";
+import { ActivityType, Prisma, Project } from "@prisma/client";
 import { ProjectSchema, TodoSchema, UserSchema } from "./schema";
 
 export type State = {
@@ -135,9 +134,7 @@ export async function createTodo(
   return { success: true, data: todoDB };
 }
 
-export async function deleteProject(
-  projectId: string,
-) {
+export async function deleteProject(projectId: string) {
   console.log("Server delete action");
   await prisma.todo.deleteMany({ where: { projectId } });
   const project = await prisma.project.delete({ where: { id: projectId } });
@@ -179,10 +176,7 @@ export async function editProject(
   return { success: true, data: updatedProject };
 }
 
-export async function deleteTodo(
-  todoId: string,
-  pathname: string,
-) {
+export async function deleteTodo(todoId: string, pathname: string) {
   const todo = await prisma.todo.delete({
     where: { id: todoId },
     include: { project: true },

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import SubmitButton from "./SubmitButton";
 import { UserSchema } from "../lib/schema";
 
+const formId = "signup";
 export default function SignupForm() {
     const { handleSubmit, register, formState: { errors, isValidating }, setError } = useForm({
         defaultValues: {
@@ -16,7 +17,7 @@ export default function SignupForm() {
         resolver: zodResolver(UserSchema)
     });
 
-    return <form className="card-body" onSubmit={handleSubmit(async (data) => {
+    return <form id={formId} className="card-body" onSubmit={handleSubmit(async (data) => {
         const formData = new FormData();
         for (const [key, value] of Object.entries(data)) {
             formData.set(key, value);
@@ -44,7 +45,7 @@ export default function SignupForm() {
             <p className="text-red-500 text-xs mt-2">{errors.password?.message}</p>
         </div>
         <div className="form-control mt-5">
-            <SubmitButton canSubmit={!isValidating} label="Login" />
+            <SubmitButton form={formId} canSubmit={!isValidating} label="Signup" />
         </div>
     </form >;
 }
