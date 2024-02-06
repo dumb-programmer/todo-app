@@ -1,5 +1,5 @@
 import { getOverdueTodos } from "@/app/lib/data";
-import TodoList from "@/app/ui/TodoList";
+import TodoList from "@/app/ui/todo/TodoList";
 
 export default async function Home() {
     const todoItems = await getOverdueTodos();

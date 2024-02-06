@@ -1,5 +1,5 @@
 import { getTodayTodos } from "../lib/data";
-import TodoList from "../ui/TodoList";
+import TodoList from "@/app/ui/todo/TodoList";
 
 export default async function Home() {
   const todoItems = await getTodayTodos();

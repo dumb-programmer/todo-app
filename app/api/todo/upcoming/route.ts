@@ -27,8 +27,6 @@ export async function GET(request: NextRequest) {
       take: 6,
     });
 
-    await waitFor(1000);
-
     return Response.json({
       rows: todoItems.slice(0, 4),
       hasMore: todoItems.length === 6,

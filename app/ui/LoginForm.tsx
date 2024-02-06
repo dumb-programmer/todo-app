@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import SubmitButton from "./SubmitButton";
 import { UserSchema } from "../lib/schema";
 
+const formId = "login";
 export default function LoginForm() {
     const { handleSubmit, register, formState: { isSubmitting, errors }, setError } = useForm({
         defaultValues: {
@@ -16,7 +17,7 @@ export default function LoginForm() {
         resolver: zodResolver(UserSchema)
     });
 
-    return <form className="card-body" onSubmit={handleSubmit(async (data) => {
+    return <form id={formId} className="card-body" onSubmit={handleSubmit(async (data) => {
         const formData = new FormData();
         for (const [key, value] of Object.entries(data)) {
             formData.set(key, value);
@@ -31,20 +32,18 @@ export default function LoginForm() {
             }
         }
     })}>
-
         <div className="form-control relative">
             <label className="label" htmlFor="email">Email</label>
             <input className={clsx("input input-bordered", errors.email?.message && "input-error border-error")}  id="email" {...register("email")} required />
             <p className="text-red-500 text-xs mt-2">{errors.email?.message}</p>
         </div>
-
         <div className="form-control">
             <label className="label" htmlFor="password">Password</label>
             <input className={clsx("input input-bordered", errors.password?.message && "input-error border-error")} type="password" id="password" {...register("password")} required />
             <p className="text-red-500 text-xs mt-2">{errors.password?.message}</p>
         </div>
         <div className="form-control mt-5">
-            <SubmitButton isSubmitting={isSubmitting} label="Login" />
+            <SubmitButton form={formId} isSubmitting={isSubmitting} label="Login" />
         </div>
     </form >;
 }

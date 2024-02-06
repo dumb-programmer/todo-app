@@ -19,11 +19,11 @@ function formatDate(date: Date) {
     return new Intl.DateTimeFormat("en-PK", { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
 
-export default function TodoItem({ todo, onEdit, onDelete }: { todo: Todo, onEdit: () => void, onDelete: () => void }) {
+export default function TodoItem({ todo, onEdit, onDelete, markTodoAsDone }: { todo: Todo, onEdit: () => void, onDelete: () => void, markTodoAsDone: () => void }) {
     return <div className="flex items-center justify-between">
         <div className="flex gap-5">
             <div className="mt-5">
-                <TodoCheckbox todoId={todo.id} />
+                <TodoCheckbox todoId={todo.id} onCheck={markTodoAsDone} />
             </div>
             <div>
                 <h2 className="text-lg">{todo?.title}</h2>

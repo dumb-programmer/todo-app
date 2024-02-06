@@ -2,9 +2,9 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Action, Content, Header, Modal } from "../components/modal";
+import { Action, Content, Header, Modal } from "../../components/modal";
 import { useForm } from "react-hook-form";
-import { deleteProject } from "../lib/actions";
+import { deleteProject } from "../../lib/actions";
 
 const formId = "delete-project";
 export default function DeleteProjectForm({ formRef, projectId, onDelete }: { formRef: React.MutableRefObject<HTMLDialogElement | null>, projectId: string, onDelete: (id: string) => void }) {

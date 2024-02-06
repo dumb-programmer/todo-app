@@ -25,9 +25,7 @@ export async function GET(request: NextRequest) {
       skip: (page - 1) * 5,
       take: 6,
     });
-
-    await waitFor(1000);
-
+    
     return Response.json({
       rows: projects.slice(0, 4),
       hasMore: projects.length === 6,

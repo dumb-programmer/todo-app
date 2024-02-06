@@ -25,14 +25,14 @@ const navigationLinks = [
         icon: <CalendarDaysIcon height={18} />
     },
     {
-        label: "Activity",
-        href: "/activity",
-        icon: <MegaphoneIcon height={18} />
-    },
-    {
         label: "Overdue",
         href: "/overdue",
         icon: <ClockIcon height={18} />
+    },
+    {
+        label: "Activity",
+        href: "/activity",
+        icon: <MegaphoneIcon height={18} />
     }
 ]
 

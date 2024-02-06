@@ -1,6 +1,6 @@
 import { getActivities } from "@/app/lib/data";
-import ActivityHeader from "@/app/ui/ActivityHeader";
-import ActivityList from "@/app/ui/ActivityList";
+import ActivityHeader from "@/app/ui/activity/ActivityHeader";
+import ActivityList from "@/app/ui/activity/ActivityList";
 import { Activity } from "@prisma/client";
 
 export default async function Page() {
@@ -21,11 +21,11 @@ export default async function Page() {
     const groupedActivitiesArray = Object.entries(groupedActivities).map(([date, activities]) => ({
         date,
         activities,
+        isCollapsed: true
     }));
 
 
-    return <div className="prose">
-        <h1>Activity</h1>
+    return <div className="prose flex flex-col gap-8">
         {
             groupedActivitiesArray.map((dailyActivities, index) =>
                 <div key={index}>

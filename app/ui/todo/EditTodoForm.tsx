@@ -1,16 +1,16 @@
 "use client";
 
-import SubmitButton from "./SubmitButton";
+import SubmitButton from "../SubmitButton";
 import { useParams } from "next/navigation";
-import { editTodo } from "../lib/actions";
+import { editTodo } from "../../lib/actions";
 import { Todo } from "@prisma/client";
 import React, { useEffect } from "react";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TodoSchema } from "../lib/schema";
-import { Action, Content, Header, Modal } from "../components/modal";
-import convertToFormData from "../lib/utils/convertToFormData";
+import { TodoSchema } from "../../lib/schema";
+import { Action, Content, Header, Modal } from "../../components/modal";
+import convertToFormData from "../../lib/utils/convertToFormData";
 
 function formatDate(date: Date) {
     const year = date.getFullYear();
@@ -30,10 +30,10 @@ export default function EditTodoForm({ formRef, todo, onEdit }: { formRef: React
     useEffect(() => {
         if (todo) {
             for (const [key, value] of Object.entries(todo)) {
-                if(key === "due"){
+                if (key === "due") {
                     setValue(key, formatDate(value as Date));
                 }
-                else{
+                else {
                     setValue(key, value);
                 }
             }
@@ -89,7 +89,7 @@ export default function EditTodoForm({ formRef, todo, onEdit }: { formRef: React
             </form>
         </Content>
         <Action>
-            <button type="submit" className="btn" form="create-todo-form">Cancel</button>
+            <button className="btn" onClick={() => formRef.current?.close()}>Cancel</button>
             <SubmitButton form={formId} label="Save" isSubmitting={isSubmitting} />
         </Action>
     </Modal>

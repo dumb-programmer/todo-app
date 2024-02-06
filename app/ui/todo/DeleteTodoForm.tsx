@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { deleteTodo } from "../lib/actions";
+import { deleteTodo } from "../../lib/actions";
 import { usePathname } from "next/navigation";
-import { Action, Content, Header, Modal } from "../components/modal";
+import { Action, Content, Header, Modal } from "../../components/modal";
 import { useForm } from "react-hook-form";
 
 const formId = "delete-todo";
@@ -30,10 +30,7 @@ export default function DeleteTodoForm({ formRef, todoId, onDelete }: { formRef:
             </form>
         </Content>
         <Action>
-            <button type="button" className="btn" onClick={(e) => {
-                e.preventDefault();
-                formRef?.current?.close();
-            }}>Cancel</button>
+            <button className="btn" onClick={() => formRef.current?.close()}>Cancel</button>
             <button type="submit" form={formId} className="btn btn-error">Delete</button>
         </Action>
     </Modal>

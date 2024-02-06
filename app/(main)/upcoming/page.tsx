@@ -1,5 +1,5 @@
 import { getUpcomingTodos } from "@/app/lib/data";
-import TodoList from "@/app/ui/TodoList";
+import TodoList from "@/app/ui/todo/TodoList";
 
 export default async function Page() {
     const todoItems = await getUpcomingTodos();

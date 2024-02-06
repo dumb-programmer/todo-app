@@ -3,7 +3,7 @@
 import { Todo } from "@prisma/client";
 import TodoItem from "./TodoItem";
 import { useCallback, useRef, useState } from "react";
-import { useInfiniteScroll } from "../lib/hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "../../lib/hooks/useInfiniteScroll";
 import CreateTodoButton from "./CreateTodoButton";
 import DeleteTodoForm from "./DeleteTodoForm";
 import EditTodoForm from "./EditTodoForm";
@@ -31,7 +31,11 @@ export default function TodoList({ todoItems, fetchMoreUrl, showAddTodoBtn = fal
                     }} onDelete={() => {
                         setSelectedTodo(todo);
                         deleteTodoDialog.current?.showModal()
-                    }} />)}
+                    }}
+                    markTodoAsDone={() => {
+                        deleteItem(todo.id);
+                    }}
+                />)}
             </div>
             {isLoading && <div className="mt-10 flex justify-center"><div className="loading loading-spinner"></div></div>}
             <div id="more-todos" ref={scrollElement}></div>

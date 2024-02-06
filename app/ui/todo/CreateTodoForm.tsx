@@ -1,16 +1,16 @@
 "use client";
 
-import SubmitButton from "./SubmitButton";
+import SubmitButton from "../SubmitButton";
 import { useParams } from "next/navigation";
-import { createTodo } from "../lib/actions";
+import { createTodo } from "../../lib/actions";
 import { Priority, Todo } from "@prisma/client";
 import React from "react";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TodoSchema } from "../lib/schema";
-import { Action, Content, Header, Modal } from "../components/modal";
-import convertToFormData from "../lib/utils/convertToFormData";
+import { TodoSchema } from "../../lib/schema";
+import { Action, Content, Header, Modal } from "../../components/modal";
+import convertToFormData from "../../lib/utils/convertToFormData";
 
 function getToday() {
     const today = new Date();
@@ -83,7 +83,7 @@ export default function CreateTodoForm({ formRef, onSuccess }: { formRef: React.
             </form>
         </Content>
         <Action>
-            <button type="submit" className="btn" form="create-todo-form">Cancel</button>
+            <button className="btn" onClick={() => formRef.current?.close()}>Cancel</button>
             <SubmitButton form={formId} label="Create" isSubmitting={isSubmitting} />
         </Action>
     </Modal>

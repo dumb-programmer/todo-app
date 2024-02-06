@@ -1,6 +1,6 @@
 import { Project } from "@prisma/client";
 import ProjectLink from "./ProjectLink";
-import { useInfiniteScroll } from "../lib/hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "../../lib/hooks/useInfiniteScroll";
 import React, { useCallback, useRef, useState } from "react";
 import CreateProjectForm from "./CreateProjectForm";
 import EditProjectForm from "./EditProjectForm";

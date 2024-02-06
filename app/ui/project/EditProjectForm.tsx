@@ -1,14 +1,14 @@
 "use client";
 
-import { editProject } from "../lib/actions";
+import { editProject } from "../../lib/actions";
 import clsx from "clsx";
 import { Project } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProjectSchema } from "../lib/schema";
-import convertToFormData from "../lib/utils/convertToFormData";
-import SubmitButton from "./SubmitButton";
-import { Modal, Header, Content, Action } from "../components/modal";
+import { ProjectSchema } from "../../lib/schema";
+import convertToFormData from "../../lib/utils/convertToFormData";
+import SubmitButton from "../SubmitButton";
+import { Modal, Header, Content, Action } from "../../components/modal";
 import { useEffect } from "react";
 
 interface Props {

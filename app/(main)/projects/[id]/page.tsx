@@ -1,5 +1,5 @@
 import { getProject, getTodos } from "@/app/lib/data";
-import TodoList from "@/app/ui/TodoList";
+import TodoList from "@/app/ui/todo/TodoList";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const project = await getProject(params.id);
