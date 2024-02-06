@@ -21,7 +21,7 @@ export default function ActivityItem({ activity }: { activity: Activity }) {
                 <div className="flex justify-center bg-gray-600 p-2 rounded-2xl after:h-full after:w-0.5 after:block after:absolute after:bg-gray-400 after:-z-10">
                     <span>{getIcon(activity.type)}</span>
                 </div>
-                <span>{new Intl.DateTimeFormat("en-PK", { hour: "numeric", minute: "numeric", second: "numeric" }).format(activity.timeStamp)}</span>
+                <span>{new Intl.DateTimeFormat("en-PK", { hour: "numeric", minute: "numeric", second: "numeric" }).format(new Date(activity.timeStamp))}</span>
                 <p>{activity.description}</p>
             </div>
             {

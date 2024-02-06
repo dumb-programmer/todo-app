@@ -65,9 +65,12 @@ export async function getOverdueTodos(email: string, page: number = 1) {
   return { rows: todoItems.slice(0, 4), hasMore: todoItems.length === 6 };
 }
 
-export async function getActivities(email: string) {
-  return await prisma.activity.findMany({
+export async function getActivities(email: string, page: number = 1) {
+  const activities = await prisma.activity.findMany({
     where: { userId: email },
     orderBy: { timeStamp: "desc" },
+    skip: (page - 1) * LIMIT,
+    take: LIMIT + 1,
   });
+  return { rows: activities.slice(0, 4), hasMore: activities.length === 6 };
 }
